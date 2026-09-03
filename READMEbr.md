@@ -6,8 +6,6 @@ Este material apresenta desde a criação de um banco de dados até operações 
 
 ---
 
----
-
 # 🧠 1. Introdução
 
 **SQL (Structured Query Language)** é uma linguagem utilizada para trabalhar com bancos de dados relacionais.
