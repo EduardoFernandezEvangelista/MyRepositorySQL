@@ -1,99 +1,70 @@
-# 🗄️ SQL — Guia Completo de Banco de Dados
+# 🗄️ SQL — Guia de Banco de Dados
 
-> Guia prático de **SQL e MySQL**, desenvolvido para consulta, estudo e aplicação em projetos reais de banco de dados.
-
-Este material apresenta desde a criação de um banco de dados até operações mais avançadas, como **relacionamentos, JOINs, agregações, subqueries, transações, views, índices e transferência de dados**.
+Referência prática de **SQL e MySQL** para trabalhar com bancos de dados relacionais: desde criação básica até JOINs, transações, views e índices.
 
 ---
 
-# 🧠 1. Introdução
+## O que é SQL
 
-**SQL (Structured Query Language)** é uma linguagem utilizada para trabalhar com bancos de dados relacionais.
+**SQL** é a linguagem para bancos de dados relacionais. Com ela você consegue:
 
-Com SQL é possível:
+- Criar e alterar tabelas
+- Inserir, consultar, atualizar e excluir dados
+- Criar relacionamentos entre tabelas
+- Filtrar, agrupar e analisar informações
+- Controlar transações e criar views
 
-* Criar bancos de dados
-* Criar e alterar tabelas
-* Inserir informações
-* Consultar dados
-* Atualizar registros
-* Excluir registros
-* Criar relacionamentos
-* Realizar consultas entre várias tabelas
-* Agrupar e analisar informações
-* Controlar transações
-* Criar views e índices
+---
 
-### Fluxo básico
+## Estrutura básica
 
 ```text
 Banco de Dados
       │
       ├── Tabelas
-      │      │
       │      ├── Colunas
       │      └── Registros
       │
-      └── Relacionamentos
-             │
-             ├── 1:1
-             ├── 1:N
-             └── N:N
+      └── Relacionamentos (1:1, 1:N, N:N)
 ```
 
 ---
 
-# 🗃️ 2. Banco de Dados
+## Banco de Dados
 
-## Principais comandos
+| Comando           | O que faz                |
+| ----------------- | ----------------------- |
+| `CREATE DATABASE` | Cria um banco           |
+| `DROP DATABASE`   | Deleta um banco         |
+| `SHOW DATABASES`  | Lista os bancos         |
+| `USE`             | Seleciona um banco      |
 
-| Comando           | Função             | Exemplo                 |
-| ----------------- | ------------------ | ----------------------- |
-| `CREATE DATABASE` | Cria um banco      | `CREATE DATABASE loja;` |
-| `DROP DATABASE`   | Exclui um banco    | `DROP DATABASE loja;`   |
-| `SHOW DATABASES`  | Lista os bancos    | `SHOW DATABASES;`       |
-| `USE`             | Seleciona um banco | `USE loja;`             |
-
-### Criar banco
+Criar e selecionar:
 
 ```sql
 CREATE DATABASE loja;
-```
-
-### Selecionar banco
-
-```sql
 USE loja;
 ```
 
-### Listar bancos
-
-```sql
-SHOW DATABASES;
-```
-
-### Excluir banco
+Excluir (⚠️ remove tudo):
 
 ```sql
 DROP DATABASE loja;
 ```
 
-> ⚠️ `DROP DATABASE` remove o banco e todas as suas tabelas.
-
 ---
 
-# 📋 3. Tabelas
+## Tabelas
 
-| Comando             | Função                                 |
-| ------------------- | -------------------------------------- |
-| `CREATE TABLE`      | Cria uma tabela                        |
-| `ALTER TABLE`       | Altera uma tabela existente            |
-| `DROP TABLE`        | Exclui uma tabela                      |
-| `TRUNCATE`          | Remove todos os registros              |
-| `DESCRIBE`          | Mostra a estrutura da tabela           |
-| `SHOW CREATE TABLE` | Mostra o SQL usado para criar a tabela |
+| Comando             | Função                      |
+| ------------------- | --------------------------- |
+| `CREATE TABLE`      | Cria tabela                 |
+| `ALTER TABLE`       | Modifica tabela             |
+| `DROP TABLE`        | Deleta tabela               |
+| `TRUNCATE`          | Limpa todos os registros    |
+| `DESCRIBE`          | Mostra a estrutura          |
 
-## CREATE TABLE
+Exemplo básico:
 
 ```sql
 CREATE TABLE usuarios (
@@ -103,8 +74,6 @@ CREATE TABLE usuarios (
 );
 ```
 
-## ALTER TABLE
-
 Adicionar coluna:
 
 ```sql
@@ -112,7 +81,7 @@ ALTER TABLE usuarios
 ADD telefone VARCHAR(20);
 ```
 
-Alterar coluna:
+Modificar coluna:
 
 ```sql
 ALTER TABLE usuarios
@@ -126,171 +95,77 @@ ALTER TABLE usuarios
 RENAME COLUMN nome TO nome_completo;
 ```
 
-## DROP TABLE
-
-```sql
-DROP TABLE usuarios;
-```
-
-Remove a tabela completamente.
-
-## TRUNCATE
+Limpar tabela (mantém estrutura):
 
 ```sql
 TRUNCATE TABLE usuarios;
 ```
 
-Remove todos os registros, mantendo a estrutura da tabela.
+### DELETE vs TRUNCATE vs DROP
 
-### DROP x TRUNCATE
-
-| Comando      | Remove dados | Remove tabela |
-| ------------ | -----------: | ------------: |
-| `DELETE`     |            ✅ |             ❌ |
-| `TRUNCATE`   |            ✅ |             ❌ |
-| `DROP TABLE` |            ✅ |             ✅ |
-
-## DESCRIBE
-
-```sql
-DESCRIBE usuarios;
-```
-
-## SHOW CREATE TABLE
-
-```sql
-SHOW CREATE TABLE usuarios;
-```
+| Comando      | Remove dados | Mantém estrutura |
+| ------------ | -----------: | ---------------: |
+| `DELETE`     |            ✅ |               ✅ |
+| `TRUNCATE`   |            ✅ |               ✅ |
+| `DROP TABLE` |            ✅ |               ❌ |
 
 ---
 
-# 🔤 4. Tipos de Dados
+## Tipos de dados
 
-| Tipo       | Utilização            | Exemplo                 |
-| ---------- | --------------------- | ----------------------- |
-| `INT`      | Números inteiros      | `100`                   |
-| `BIGINT`   | Inteiros grandes      | `999999999`             |
-| `DECIMAL`  | Valores monetários    | `199.90`                |
-| `FLOAT`    | Números decimais      | `10.5`                  |
-| `CHAR`     | Texto de tamanho fixo | `'BR'`                  |
-| `VARCHAR`  | Texto variável        | `'Eduardo'`             |
-| `TEXT`     | Textos longos         | `'Descrição...'`        |
-| `DATE`     | Data                  | `'2026-09-03'`          |
-| `DATETIME` | Data e hora           | `'2026-09-03 13:30:00'` |
-| `TIME`     | Horário               | `'13:30:00'`            |
-| `BOOLEAN`  | Verdadeiro/Falso      | `TRUE`                  |
-| `JSON`     | Dados JSON            | `'{"nome":"Edu"}'`      |
+| Tipo       | Uso                      | Exemplo              |
+| ---------- | ------------------------ | -------------------- |
+| `INT`      | Números inteiros         | `100`                |
+| `BIGINT`   | Inteiros grandes         | `999999999`          |
+| `DECIMAL`  | Valores monetários       | `199.90`             |
+| `FLOAT`    | Decimais                 | `10.5`               |
+| `VARCHAR`  | Texto variável           | `'Eduardo'`          |
+| `TEXT`     | Textos longos            | `'Descrição...'`     |
+| `DATE`     | Data                     | `'2026-09-03'`       |
+| `DATETIME` | Data e hora              | `'2026-09-03 13:30'` |
+| `BOOLEAN`  | Verdadeiro/Falso         | `TRUE`               |
+| `JSON`     | Dados JSON               | `'{"nome":"Edu"}'`   |
 
-### Exemplo
+---
+
+## Constraints (Regras)
+
+Garantem a integridade dos dados:
+
+| Constraint       | O que faz                        |
+| ---------------- | -------------------------------- |
+| `PRIMARY KEY`    | Identifica cada registro         |
+| `FOREIGN KEY`    | Relaciona tabelas                |
+| `UNIQUE`         | Impede valores duplicados        |
+| `NOT NULL`       | Obriga preenchimento             |
+| `DEFAULT`        | Valor padrão se não informado    |
+| `CHECK`          | Valida uma condição              |
+| `AUTO_INCREMENT` | Incrementa automaticamente       |
+
+Exemplo:
 
 ```sql
 CREATE TABLE produtos (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100),
-    preco DECIMAL(10,2),
-    estoque INT,
-    criado_em DATETIME
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10,2) CHECK (preco > 0),
+    estoque INT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'ativo'
 );
 ```
 
 ---
 
-# 🔒 5. Constraints
+## CRUD — As 4 operações básicas
 
-Constraints são regras aplicadas às colunas para manter a **integridade dos dados**.
-
-| Constraint       | Função                            |
-| ---------------- | --------------------------------- |
-| `PRIMARY KEY`    | Identifica cada registro          |
-| `FOREIGN KEY`    | Cria relacionamento entre tabelas |
-| `UNIQUE`         | Impede valores duplicados         |
-| `NOT NULL`       | Impede valores nulos              |
-| `DEFAULT`        | Define um valor padrão            |
-| `CHECK`          | Valida uma condição               |
-| `AUTO_INCREMENT` | Gera números automaticamente      |
-
-## PRIMARY KEY
-
-```sql
-id INT PRIMARY KEY AUTO_INCREMENT
-```
-
-Cada registro possui um identificador único.
-
-## FOREIGN KEY
-
-```sql
-usuario_id INT,
-
-FOREIGN KEY (usuario_id)
-REFERENCES usuarios(id)
-```
-
-Relaciona uma tabela com outra.
-
-## UNIQUE
-
-```sql
-email VARCHAR(150) UNIQUE
-```
-
-Não permite dois usuários com o mesmo email.
-
-## NOT NULL
-
-```sql
-nome VARCHAR(100) NOT NULL
-```
-
-O campo precisa receber um valor.
-
-## DEFAULT
-
-```sql
-status VARCHAR(20) DEFAULT 'ativo'
-```
-
-Caso nenhum valor seja informado:
-
-```text
-status = ativo
-```
-
-## CHECK
-
-```sql
-idade INT CHECK (idade >= 18)
-```
-
-## AUTO_INCREMENT
-
-```sql
-id INT AUTO_INCREMENT PRIMARY KEY
-```
-
-Exemplo:
-
-```text
-1
-2
-3
-4
-5
-...
-```
-
----
-
-# ➕ 6. INSERT
-
-Utilizado para inserir registros.
+### CREATE — Inserir
 
 ```sql
 INSERT INTO usuarios (nome, email)
 VALUES ('João', 'joao@email.com');
 ```
 
-Inserindo vários registros:
+Vários registros:
 
 ```sql
 INSERT INTO usuarios (nome, email)
@@ -300,247 +175,25 @@ VALUES
 ('Pedro', 'pedro@email.com');
 ```
 
----
-
-# 🔎 7. SELECT
-
-Usado para consultar dados.
+### READ — Consultar
 
 ```sql
 SELECT * FROM usuarios;
 ```
 
-Selecionar colunas específicas:
+Colunas específicas:
 
 ```sql
-SELECT nome, email
-FROM usuarios;
+SELECT nome, email FROM usuarios;
 ```
 
-Criar alias:
+Com alias:
 
 ```sql
-SELECT nome AS usuario
-FROM usuarios;
+SELECT nome AS usuario FROM usuarios;
 ```
 
----
-
-# 🎯 8. WHERE
-
-Filtra registros.
-
-```sql
-SELECT *
-FROM usuarios
-WHERE id = 1;
-```
-
-Outro exemplo:
-
-```sql
-SELECT *
-FROM produtos
-WHERE preco > 100;
-```
-
----
-
-# ⚙️ 9. Operadores
-
-| Operador | Significado    |
-| -------- | -------------- |
-| `=`      | Igual          |
-| `<>`     | Diferente      |
-| `!=`     | Diferente      |
-| `>`      | Maior          |
-| `<`      | Menor          |
-| `>=`     | Maior ou igual |
-| `<=`     | Menor ou igual |
-| `AND`    | E              |
-| `OR`     | Ou             |
-| `NOT`    | Negação        |
-
-### Exemplo
-
-```sql
-SELECT *
-FROM produtos
-WHERE preco >= 100
-AND estoque > 0;
-```
-
----
-
-# 🔤 10. LIKE
-
-Pesquisa padrões de texto.
-
-| Símbolo | Função                            |
-| ------- | --------------------------------- |
-| `%`     | Qualquer quantidade de caracteres |
-| `_`     | Um único caractere                |
-
-### Começa com
-
-```sql
-SELECT *
-FROM usuarios
-WHERE nome LIKE 'Jo%';
-```
-
-### Termina com
-
-```sql
-SELECT *
-FROM usuarios
-WHERE nome LIKE '%Silva';
-```
-
-### Contém
-
-```sql
-SELECT *
-FROM usuarios
-WHERE nome LIKE '%ana%';
-```
-
----
-
-# 📌 11. IN
-
-Verifica se um valor pertence a uma lista.
-
-```sql
-SELECT *
-FROM produtos
-WHERE categoria_id IN (1, 2, 3);
-```
-
-Equivale a:
-
-```sql
-WHERE categoria_id = 1
-   OR categoria_id = 2
-   OR categoria_id = 3;
-```
-
----
-
-# 📅 12. BETWEEN
-
-Pesquisa valores dentro de um intervalo.
-
-```sql
-SELECT *
-FROM produtos
-WHERE preco BETWEEN 100 AND 500;
-```
-
-Também pode ser usado com datas:
-
-```sql
-SELECT *
-FROM pedidos
-WHERE data_pedido
-BETWEEN '2026-01-01' AND '2026-12-31';
-```
-
----
-
-# ❓ 13. NULL
-
-`NULL` representa ausência de valor.
-
-### Encontrar valores nulos
-
-```sql
-SELECT *
-FROM usuarios
-WHERE telefone IS NULL;
-```
-
-### Encontrar valores preenchidos
-
-```sql
-SELECT *
-FROM usuarios
-WHERE telefone IS NOT NULL;
-```
-
-> Não utilize `= NULL`.
-
-Use:
-
-```sql
-IS NULL
-```
-
-ou:
-
-```sql
-IS NOT NULL
-```
-
----
-
-# ↕️ 14. ORDER BY
-
-Ordena resultados.
-
-### Crescente
-
-```sql
-SELECT *
-FROM produtos
-ORDER BY preco ASC;
-```
-
-### Decrescente
-
-```sql
-SELECT *
-FROM produtos
-ORDER BY preco DESC;
-```
-
----
-
-# 🔢 15. LIMIT
-
-Limita a quantidade de resultados.
-
-```sql
-SELECT *
-FROM produtos
-LIMIT 10;
-```
-
-Exemplo com ordenação:
-
-```sql
-SELECT *
-FROM produtos
-ORDER BY preco DESC
-LIMIT 5;
-```
-
----
-
-# 🔀 16. DISTINCT
-
-Remove valores duplicados.
-
-```sql
-SELECT DISTINCT categoria_id
-FROM produtos;
-```
-
----
-
-# ✏️ 17. UPDATE
-
-Atualiza registros existentes.
+### UPDATE — Atualizar
 
 ```sql
 UPDATE usuarios
@@ -548,64 +201,141 @@ SET nome = 'Carlos'
 WHERE id = 1;
 ```
 
-Atualizando vários campos:
+Vários campos:
 
 ```sql
 UPDATE usuarios
-SET nome = 'Carlos',
-    email = 'carlos@email.com'
+SET nome = 'Carlos', email = 'carlos@email.com'
 WHERE id = 1;
 ```
 
-> ⚠️ Sempre tenha cuidado com `UPDATE` sem `WHERE`.
-
----
-
-# 🗑️ 18. DELETE
-
-Remove registros.
+### DELETE — Excluir
 
 ```sql
-DELETE FROM usuarios
-WHERE id = 5;
+DELETE FROM usuarios WHERE id = 5;
 ```
 
-Remover todos:
+⚠️ Sempre use `WHERE` ou vai deletar tudo.
+
+---
+
+## Filtros e consultas
+
+### WHERE
+
+Filtra registros:
 
 ```sql
-DELETE FROM usuarios;
+SELECT * FROM produtos
+WHERE preco > 100;
 ```
 
-### DELETE x TRUNCATE
+Combinações:
 
-| Característica                    | DELETE | TRUNCATE |
-| --------------------------------- | ------ | -------- |
-| Remove registros                  | ✅      | ✅        |
-| Pode usar `WHERE`                 | ✅      | ❌        |
-| Mantém tabela                     | ✅      | ✅        |
-| É útil para exclusões específicas | ✅      | ❌        |
+```sql
+SELECT * FROM produtos
+WHERE preco >= 100 AND estoque > 0;
+```
+
+### Operadores
+
+| Operador | Significado |
+| -------- | ----------- |
+| `=`      | Igual       |
+| `<>`     | Diferente   |
+| `>`      | Maior       |
+| `<`      | Menor       |
+| `>=`     | Maior igual |
+| `<=`     | Menor igual |
+| `AND`    | E           |
+| `OR`     | Ou          |
+| `NOT`    | Negação     |
+
+### LIKE
+
+Busca padrões de texto:
+
+```sql
+SELECT * FROM usuarios
+WHERE nome LIKE 'Jo%';        -- começa com Jo
+
+SELECT * FROM usuarios
+WHERE nome LIKE '%Silva';     -- termina com Silva
+
+SELECT * FROM usuarios
+WHERE nome LIKE '%ana%';      -- contém ana
+```
+
+### IN
+
+Valores de uma lista:
+
+```sql
+SELECT * FROM produtos
+WHERE categoria_id IN (1, 2, 3);
+```
+
+### BETWEEN
+
+Intervalo de valores:
+
+```sql
+SELECT * FROM produtos
+WHERE preco BETWEEN 100 AND 500;
+```
+
+### NULL
+
+```sql
+SELECT * FROM usuarios
+WHERE telefone IS NULL;
+
+SELECT * FROM usuarios
+WHERE telefone IS NOT NULL;
+```
+
+Nunca use `= NULL`.
+
+### ORDER BY
+
+Ordena resultados:
+
+```sql
+SELECT * FROM produtos
+ORDER BY preco ASC;      -- crescente
+
+SELECT * FROM produtos
+ORDER BY preco DESC;     -- decrescente
+```
+
+### LIMIT
+
+Limita resultados:
+
+```sql
+SELECT * FROM produtos
+LIMIT 10;
+
+SELECT * FROM produtos
+ORDER BY preco DESC
+LIMIT 5;  -- top 5 mais caros
+```
+
+### DISTINCT
+
+Remove duplicados:
+
+```sql
+SELECT DISTINCT categoria_id FROM produtos;
+```
 
 ---
 
-# 🔗 19. Relacionamentos
+## Relacionamentos
 
-Relacionamentos representam como as tabelas se conectam.
+### 1:1 — Um para Um
 
----
-
-## 1:1 — Um para Um
-
-Um registro possui relação com apenas um registro da outra tabela.
-
-```text
-USUARIO
-   │
-   │ 1:1
-   ▼
-PERFIL
-```
-
-Exemplo:
+Um registro se relaciona com apenas um de outra tabela.
 
 ```sql
 CREATE TABLE usuarios (
@@ -616,29 +346,15 @@ CREATE TABLE usuarios (
 CREATE TABLE perfis (
     id INT PRIMARY KEY AUTO_INCREMENT,
     usuario_id INT UNIQUE,
-
-    FOREIGN KEY (usuario_id)
-    REFERENCES usuarios(id)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 ```
 
-O `UNIQUE` impede que um usuário tenha vários perfis.
+O `UNIQUE` garante que cada usuário tem um perfil.
 
----
+### 1:N — Um para Muitos
 
-## 1:N — Um para Muitos
-
-Um registro possui vários registros relacionados.
-
-```text
-CLIENTE
-   │
-   ├── PEDIDO
-   ├── PEDIDO
-   └── PEDIDO
-```
-
-Exemplo:
+Um cliente pode ter vários pedidos.
 
 ```sql
 CREATE TABLE clientes (
@@ -649,48 +365,15 @@ CREATE TABLE clientes (
 CREATE TABLE pedidos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     cliente_id INT,
-
-    FOREIGN KEY (cliente_id)
-    REFERENCES clientes(id)
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
 ```
 
-Um cliente pode ter vários pedidos.
+### N:N — Muitos para Muitos
 
----
+Alunos e cursos: um aluno faz vários cursos, um curso tem vários alunos.
 
-## N:1 — Muitos para Um
-
-É a visão inversa do relacionamento `1:N`.
-
-```text
-PEDIDO ──────► CLIENTE
-   N              1
-```
-
-Vários pedidos pertencem a um cliente.
-
----
-
-## N:N — Muitos para Muitos
-
-Vários registros de uma tabela podem se relacionar com vários registros de outra.
-
-Exemplo:
-
-```text
-ALUNOS
-  │
-  │
-  ▼
-MATRICULAS
-  ▲
-  │
-  │
-CURSOS
-```
-
-Tabela intermediária:
+Use uma tabela intermediária:
 
 ```sql
 CREATE TABLE alunos (
@@ -706,83 +389,50 @@ CREATE TABLE cursos (
 CREATE TABLE matriculas (
     aluno_id INT,
     curso_id INT,
-
     PRIMARY KEY (aluno_id, curso_id),
-
-    FOREIGN KEY (aluno_id)
-    REFERENCES alunos(id),
-
-    FOREIGN KEY (curso_id)
-    REFERENCES cursos(id)
+    FOREIGN KEY (aluno_id) REFERENCES alunos(id),
+    FOREIGN KEY (curso_id) REFERENCES cursos(id)
 );
 ```
 
-> Em bancos relacionais, o relacionamento `N:N` normalmente é implementado utilizando uma **tabela associativa/intermediária**.
-
 ---
 
-# 🔗 20. JOIN
+## JOIN — Combinar tabelas
 
-`JOIN` combina informações de diferentes tabelas.
+### INNER JOIN
 
----
-
-## INNER JOIN
-
-Retorna somente registros que possuem correspondência nas duas tabelas.
+Retorna apenas registros que existem nas duas tabelas.
 
 ```sql
-SELECT
-    clientes.nome,
-    pedidos.id
+SELECT clientes.nome, pedidos.id
 FROM clientes
 INNER JOIN pedidos
     ON pedidos.cliente_id = clientes.id;
 ```
 
-```text
-CLIENTE ───── PEDIDO
-    │            │
-    └──── JOIN ──┘
-```
+### LEFT JOIN
 
----
-
-## LEFT JOIN
-
-Retorna todos os registros da tabela da esquerda.
+Todos os clientes, mesmo sem pedidos.
 
 ```sql
-SELECT
-    clientes.nome,
-    pedidos.id
+SELECT clientes.nome, pedidos.id
 FROM clientes
 LEFT JOIN pedidos
     ON pedidos.cliente_id = clientes.id;
 ```
 
-Mesmo clientes sem pedidos aparecerão.
+### RIGHT JOIN
 
----
-
-## RIGHT JOIN
-
-Retorna todos os registros da tabela da direita.
+Todos os pedidos, mesmo sem cliente.
 
 ```sql
-SELECT
-    clientes.nome,
-    pedidos.id
+SELECT clientes.nome, pedidos.id
 FROM clientes
 RIGHT JOIN pedidos
     ON pedidos.cliente_id = clientes.id;
 ```
 
----
-
-## Múltiplos JOINs
-
-É possível conectar várias tabelas.
+### Múltiplos JOINs
 
 ```sql
 SELECT
@@ -790,86 +440,47 @@ SELECT
     pedidos.id,
     produtos.nome
 FROM clientes
-
 INNER JOIN pedidos
     ON pedidos.cliente_id = clientes.id
-
 INNER JOIN itens_pedido
     ON itens_pedido.pedido_id = pedidos.id
-
 INNER JOIN produtos
     ON produtos.id = itens_pedido.produto_id;
 ```
 
-### Estrutura
+---
 
-```text
-CLIENTE
-   │
-   ▼
-PEDIDO
-   │
-   ▼
-ITEM_PEDIDO
-   │
-   ▼
-PRODUTO
+## Agregação
+
+Funções que trabalham com vários registros:
+
+| Função    | Resultado     |
+| --------- | ------------- |
+| `COUNT()` | Conta         |
+| `SUM()`   | Soma          |
+| `AVG()`   | Média         |
+| `MAX()`   | Valor máximo  |
+| `MIN()`   | Valor mínimo  |
+
+Exemplos:
+
+```sql
+SELECT COUNT(*) AS total FROM usuarios;
+
+SELECT SUM(preco) AS total FROM produtos;
+
+SELECT AVG(preco) AS media FROM produtos;
+
+SELECT MAX(preco) AS maior FROM produtos;
+
+SELECT MIN(preco) AS menor FROM produtos;
 ```
 
 ---
 
-# 📊 21. Agregação
+## GROUP BY e HAVING
 
-Funções de agregação trabalham com vários registros.
-
-| Função    | Função          |
-| --------- | --------------- |
-| `COUNT()` | Conta registros |
-| `SUM()`   | Soma valores    |
-| `AVG()`   | Calcula média   |
-| `MAX()`   | Maior valor     |
-| `MIN()`   | Menor valor     |
-
-### COUNT
-
-```sql
-SELECT COUNT(*) AS total
-FROM usuarios;
-```
-
-### SUM
-
-```sql
-SELECT SUM(preco) AS total
-FROM produtos;
-```
-
-### AVG
-
-```sql
-SELECT AVG(preco) AS media
-FROM produtos;
-```
-
-### MAX
-
-```sql
-SELECT MAX(preco) AS maior
-FROM produtos;
-```
-
-### MIN
-
-```sql
-SELECT MIN(preco) AS menor
-FROM produtos;
-```
-
----
-
-# 📦 22. GROUP BY
-
-Agrupa registros.
+Agrupar e filtrar grupos:
 
 ```sql
 SELECT
@@ -879,21 +490,7 @@ FROM produtos
 GROUP BY categoria_id;
 ```
 
-Resultado conceitual:
-
-```text
-categoria | quantidade
-----------|-----------
-1         | 10
-2         | 5
-3         | 8
-```
-
----
-
-# 🎯 23. HAVING
-
-Filtra grupos criados pelo `GROUP BY`.
+Filtrar grupos (use `HAVING`, não `WHERE`):
 
 ```sql
 SELECT
@@ -904,129 +501,74 @@ GROUP BY categoria_id
 HAVING COUNT(*) > 5;
 ```
 
-### WHERE x HAVING
-
-| Comando  | Filtra                         |
-| -------- | ------------------------------ |
-| `WHERE`  | Registros antes do agrupamento |
-| `HAVING` | Grupos depois do agrupamento   |
+**Diferença:** `WHERE` filtra registros antes do agrupamento. `HAVING` filtra grupos depois.
 
 ---
 
-# 🧩 24. Subqueries
+## Subqueries
 
-Uma subquery é uma consulta dentro de outra consulta.
-
-Exemplo:
+Consulta dentro de consulta:
 
 ```sql
-SELECT *
-FROM produtos
+SELECT * FROM produtos
 WHERE preco > (
-    SELECT AVG(preco)
-    FROM produtos
+    SELECT AVG(preco) FROM produtos
 );
 ```
 
-Essa consulta retorna produtos cujo preço está acima da média.
+Retorna produtos acima da média.
 
-### Estrutura
+### EXISTS
 
-```text
-SELECT principal
-      │
-      └── Subquery
-             │
-             └── Calcula a média
-```
-
----
-
-# 🔍 25. EXISTS
-
-Verifica se uma subconsulta retorna algum resultado.
+Verifica se uma subquery retorna algo:
 
 ```sql
-SELECT *
-FROM clientes c
+SELECT * FROM clientes c
 WHERE EXISTS (
-    SELECT 1
-    FROM pedidos p
+    SELECT 1 FROM pedidos p
     WHERE p.cliente_id = c.id
 );
 ```
 
-Retorna clientes que possuem pelo menos um pedido.
+Clientes que têm pelo menos um pedido.
 
 ---
 
-# 🔀 26. UNION
+## UNION
 
-Combina resultados de duas consultas.
+Combina resultados de duas consultas:
 
 ```sql
-SELECT nome
-FROM clientes
-
+SELECT nome FROM clientes
 UNION
-
-SELECT nome
-FROM fornecedores;
+SELECT nome FROM fornecedores;
 ```
 
-As consultas precisam possuir quantidade e tipos de colunas compatíveis.
-
-### UNION ALL
-
-```sql
-SELECT nome
-FROM clientes
-
-UNION ALL
-
-SELECT nome
-FROM fornecedores;
-```
-
-`UNION` remove duplicados.
-
-`UNION ALL` mantém duplicados.
+`UNION` remove duplicados. Use `UNION ALL` para manter.
 
 ---
 
-# 🔀 27. CASE
+## CASE
 
-Permite criar condições dentro do `SELECT`.
+Condições dentro de SELECT:
 
 ```sql
 SELECT
     nome,
     preco,
-
     CASE
         WHEN preco < 100 THEN 'Barato'
         WHEN preco < 500 THEN 'Médio'
         ELSE 'Caro'
     END AS classificacao
-
 FROM produtos;
-```
-
-Resultado:
-
-```text
-Produto     Preço     Classificação
-------------------------------------
-Mouse       50        Barato
-Teclado     200       Médio
-Monitor     900       Caro
 ```
 
 ---
 
-# 🧱 28. COALESCE
+## COALESCE
 
-Retorna o primeiro valor que não seja `NULL`.
+Substitui `NULL` por um valor:
 
 ```sql
 SELECT
@@ -1035,243 +577,97 @@ SELECT
 FROM usuarios;
 ```
 
-Se `telefone` for `NULL`, será mostrado:
-
-```text
-Não informado
-```
-
 ---
-
-# 📋 29. Cópia de Dados
-
-É possível copiar dados de uma tabela para outra.
 
 ## INSERT INTO SELECT
 
-```sql
-INSERT INTO usuarios_backup
-SELECT *
-FROM usuarios;
-```
-
-Também podemos selecionar colunas específicas:
+Copiar dados de uma tabela para outra:
 
 ```sql
 INSERT INTO usuarios_backup (nome, email)
-SELECT nome, email
-FROM usuarios;
-```
-
-### Exemplo prático
-
-Tabela original:
-
-```text
-usuarios
-```
-
-Tabela de backup:
-
-```text
-usuarios_backup
-```
-
-Processo:
-
-```text
-usuarios
-    │
-    │ SELECT
-    ▼
-usuarios_backup
+SELECT nome, email FROM usuarios;
 ```
 
 ---
 
-# 🚚 30. Transferência de Dados
+## Transactions
 
-É possível mover registros de uma tabela para outra.
-
-Primeiro copiamos:
-
-```sql
-INSERT INTO usuarios_ativos (nome, email)
-SELECT nome, email
-FROM usuarios
-WHERE status = 'ativo';
-```
-
-Depois removemos os registros originais:
-
-```sql
-DELETE FROM usuarios
-WHERE status = 'ativo';
-```
-
-### Forma segura
-
-Esse tipo de operação é um ótimo candidato para uma **transaction**:
+Executa operações como uma unidade única. Se algo falhar, tudo volta.
 
 ```sql
 START TRANSACTION;
 
-INSERT INTO usuarios_ativos (nome, email)
-SELECT nome, email
-FROM usuarios
-WHERE status = 'ativo';
-
-DELETE FROM usuarios
-WHERE status = 'ativo';
+UPDATE contas SET saldo = saldo - 100 WHERE id = 1;
+UPDATE contas SET saldo = saldo + 100 WHERE id = 2;
 
 COMMIT;
 ```
 
-Se houver algum problema:
+Se algo deu errado:
 
 ```sql
 ROLLBACK;
 ```
 
----
-
-# 💳 31. Transactions
-
-Transactions permitem executar várias operações como uma única unidade.
-
-Principais comandos:
-
-| Comando             | Função                |
-| ------------------- | --------------------- |
-| `START TRANSACTION` | Inicia transaction    |
-| `COMMIT`            | Confirma alterações   |
-| `ROLLBACK`          | Desfaz alterações     |
-| `SAVEPOINT`         | Cria ponto de retorno |
-
-### Exemplo
-
-```sql
-START TRANSACTION;
-
-UPDATE contas
-SET saldo = saldo - 100
-WHERE id = 1;
-
-UPDATE contas
-SET saldo = saldo + 100
-WHERE id = 2;
-
-COMMIT;
-```
-
-Se ocorrer um erro:
-
-```sql
-ROLLBACK;
-```
-
-### Conceito
-
-```text
-START TRANSACTION
-       │
-       ├── UPDATE
-       ├── UPDATE
-       ├── INSERT
-       │
-       ▼
-    COMMIT
-       │
-       ▼
-Alterações confirmadas
-```
+Conceito: ou tudo funciona, ou nada funciona.
 
 ---
 
-# 👁️ 32. VIEW
+## VIEW
 
-Uma `VIEW` é uma consulta armazenada que pode ser utilizada como uma tabela virtual.
-
-### Criar
+Consulta armazenada que funciona como uma tabela virtual:
 
 ```sql
 CREATE VIEW clientes_pedidos AS
-
 SELECT
     clientes.nome,
     pedidos.id
 FROM clientes
-
 INNER JOIN pedidos
     ON pedidos.cliente_id = clientes.id;
 ```
 
-Consultar:
+Usar:
 
 ```sql
-SELECT *
-FROM clientes_pedidos;
+SELECT * FROM clientes_pedidos;
 ```
 
-Excluir:
+Deletar:
 
 ```sql
 DROP VIEW clientes_pedidos;
 ```
 
-### Vantagens
+---
 
-* Simplificar consultas complexas
-* Reutilizar consultas
-* Facilitar relatórios
-* Controlar quais colunas serão expostas
+## INDEX
+
+Melhora a velocidade de buscas:
+
+```sql
+CREATE INDEX idx_email ON usuarios(email);
+```
+
+Único:
+
+```sql
+CREATE UNIQUE INDEX idx_email ON usuarios(email);
+```
+
+Remover:
+
+```sql
+DROP INDEX idx_email ON usuarios;
+```
+
+⚠️ Índices ocupam espaço e custam em INSERT/UPDATE/DELETE. Use com planejamento, principalmente em colunas de `WHERE`, `JOIN` e `ORDER BY`.
 
 ---
 
-# ⚡ 33. INDEX
+## ON DELETE / ON UPDATE
 
-Índices ajudam o banco de dados a localizar registros com mais eficiência.
-
-### Criar índice
-
-```sql
-CREATE INDEX idx_email
-ON usuarios(email);
-```
-
-### Índice único
-
-```sql
-CREATE UNIQUE INDEX idx_email
-ON usuarios(email);
-```
-
-### Remover
-
-```sql
-DROP INDEX idx_email
-ON usuarios;
-```
-
-### Quando utilizar?
-
-Índices são especialmente importantes em colunas frequentemente utilizadas em:
-
-```sql
-WHERE
-JOIN
-ORDER BY
-```
-
-> ⚠️ Índices não são gratuitos: ocupam espaço e podem aumentar o custo de `INSERT`, `UPDATE` e `DELETE`. Devem ser utilizados de forma planejada.
-
----
-
-# 🔄 34. ON DELETE / ON UPDATE
-
-Controlam o comportamento de uma `FOREIGN KEY` quando o registro relacionado é alterado ou excluído.
-
-### CASCADE
+Controla o que acontece com registros relacionados:
 
 ```sql
 FOREIGN KEY (cliente_id)
@@ -1280,460 +676,143 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ```
 
-Se o cliente for excluído, seus registros dependentes também serão.
-
-### RESTRICT
-
-```sql
-ON DELETE RESTRICT
-```
-
-Impede a exclusão quando existem registros relacionados.
-
-### SET NULL
-
-```sql
-ON DELETE SET NULL
-```
-
-Define a chave estrangeira como `NULL`.
-
-A coluna precisa aceitar `NULL`.
-
-### Resumo
-
-| Ação        | Comportamento                                          |
-| ----------- | ------------------------------------------------------ |
-| `CASCADE`   | Propaga alteração/exclusão                             |
-| `RESTRICT`  | Impede operação                                        |
-| `SET NULL`  | Define FK como `NULL`                                  |
-| `NO ACTION` | Mantém comportamento de restrição conforme o mecanismo |
+| Ação        | Faz                            |
+| ----------- | ------------------------------ |
+| `CASCADE`   | Deleta registros dependentes   |
+| `RESTRICT`  | Impede a operação              |
+| `SET NULL`  | Define FK como `NULL`          |
 
 ---
 
-# 🧩 35. CRUD
+## Classificação de comandos
 
-CRUD representa as quatro operações fundamentais de manipulação de dados.
-
-| CRUD       | SQL      | Operação  |
-| ---------- | -------- | --------- |
-| **C**reate | `INSERT` | Criar     |
-| **R**ead   | `SELECT` | Consultar |
-| **U**pdate | `UPDATE` | Atualizar |
-| **D**elete | `DELETE` | Excluir   |
-
-### CREATE
-
-```sql
-INSERT INTO usuarios (nome, email)
-VALUES ('João', 'joao@email.com');
-```
-
-### READ
-
-```sql
-SELECT *
-FROM usuarios;
-```
-
-### UPDATE
-
-```sql
-UPDATE usuarios
-SET nome = 'Carlos'
-WHERE id = 1;
-```
-
-### DELETE
-
-```sql
-DELETE FROM usuarios
-WHERE id = 1;
-```
+| Tipo  | O que faz                   | Exemplos                      |
+| ----- | --------------------------- | ----------------------------- |
+| **DDL** | Define estrutura | `CREATE`, `ALTER`, `DROP` |
+| **DML** | Manipula dados | `INSERT`, `UPDATE`, `DELETE` |
+| **DQL** | Consulta dados | `SELECT` |
+| **TCL** | Controla transações | `COMMIT`, `ROLLBACK` |
 
 ---
 
-# 🏗️ 36. DDL / DML / DQL / TCL
+## Exemplo: Loja Virtual
 
-Os comandos SQL podem ser classificados em grupos.
+Modelo:
 
-| Categoria | Significado                  | Principais comandos                   |
-| --------- | ---------------------------- | ------------------------------------- |
-| **DDL**   | Data Definition Language     | `CREATE`, `ALTER`, `DROP`, `TRUNCATE` |
-| **DML**   | Data Manipulation Language   | `INSERT`, `UPDATE`, `DELETE`          |
-| **DQL**   | Data Query Language          | `SELECT`                              |
-| **TCL**   | Transaction Control Language | `COMMIT`, `ROLLBACK`, `SAVEPOINT`     |
-
-### DDL
-
-Trabalha com a estrutura do banco:
-
-```sql
-CREATE TABLE produtos (...);
-ALTER TABLE produtos ...;
-DROP TABLE produtos;
+```
+CLIENTES
+    │
+    ├─ PEDIDOS
+         │
+         ├─ ITENS_PEDIDO
+              │
+              └─ PRODUTOS
+                  │
+                  └─ CATEGORIAS
 ```
 
-### DML
-
-Trabalha com os dados:
-
-```sql
-INSERT INTO produtos ...;
-
-UPDATE produtos ...;
-
-DELETE FROM produtos ...;
-```
-
-### DQL
-
-Consulta informações:
-
-```sql
-SELECT *
-FROM produtos;
-```
-
-### TCL
-
-Controla transações:
-
-```sql
-START TRANSACTION;
-
-UPDATE produtos
-SET estoque = estoque - 1
-WHERE id = 1;
-
-COMMIT;
-```
-
----
-
-# 🚀 37. Projeto Final
-
-Para colocar todos os conceitos em prática, podemos construir um pequeno sistema de **loja virtual**.
-
-## Modelo
-
-```text
-                    ┌──────────────┐
-                    │   CLIENTES   │
-                    └──────┬───────┘
-                           │
-                           │ 1:N
-                           ▼
-                    ┌──────────────┐
-                    │   PEDIDOS    │
-                    └──────┬───────┘
-                           │
-                           │ 1:N
-                           ▼
-                  ┌──────────────────┐
-                  │  ITENS_PEDIDO    │
-                  └────────┬─────────┘
-                           │
-                           │ N:1
-                           ▼
-                    ┌──────────────┐
-                    │   PRODUTOS   │
-                    └──────┬───────┘
-                           │
-                           │ N:1
-                           ▼
-                    ┌──────────────┐
-                    │  CATEGORIAS  │
-                    └──────────────┘
-```
-
----
-
-## Criar banco
+Criar banco e tabelas:
 
 ```sql
 CREATE DATABASE loja;
-
 USE loja;
-```
 
----
-
-## Criar categorias
-
-```sql
 CREATE TABLE categorias (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL UNIQUE
 );
-```
 
----
-
-## Criar produtos
-
-```sql
 CREATE TABLE produtos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(150) NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
     estoque INT DEFAULT 0,
     categoria_id INT,
-
-    FOREIGN KEY (categoria_id)
-    REFERENCES categorias(id)
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
-```
 
----
-
-## Criar clientes
-
-```sql
 CREATE TABLE clientes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE
 );
-```
 
----
-
-## Criar pedidos
-
-```sql
 CREATE TABLE pedidos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     cliente_id INT NOT NULL,
     data_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (cliente_id)
-    REFERENCES clientes(id)
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
-```
 
----
-
-## Criar itens do pedido
-
-```sql
 CREATE TABLE itens_pedido (
     pedido_id INT,
     produto_id INT,
     quantidade INT NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
-
     PRIMARY KEY (pedido_id, produto_id),
-
-    FOREIGN KEY (pedido_id)
-    REFERENCES pedidos(id),
-
-    FOREIGN KEY (produto_id)
-    REFERENCES produtos(id)
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
 );
 ```
 
----
-
-# 📊 Consultas do projeto
-
-### Produtos com suas categorias
+Consultas úteis:
 
 ```sql
+-- Produtos com categoria
+SELECT p.nome, c.nome AS categoria, p.preco
+FROM produtos p
+INNER JOIN categorias c ON p.categoria_id = c.id;
+
+-- Clientes e pedidos
+SELECT c.nome, COUNT(p.id) AS total_pedidos
+FROM clientes c
+LEFT JOIN pedidos p ON p.cliente_id = c.id
+GROUP BY c.id;
+
+-- Produtos acima da média
+SELECT * FROM produtos
+WHERE preco > (SELECT AVG(preco) FROM produtos);
+
+-- Classificar produtos por preço
 SELECT
-    produtos.nome AS produto,
-    categorias.nome AS categoria,
-    produtos.preco
-FROM produtos
-
-INNER JOIN categorias
-    ON produtos.categoria_id = categorias.id;
-```
-
-### Clientes e seus pedidos
-
-```sql
-SELECT
-    clientes.nome,
-    pedidos.id AS pedido
-FROM clientes
-
-LEFT JOIN pedidos
-    ON pedidos.cliente_id = clientes.id;
-```
-
-### Quantidade de pedidos por cliente
-
-```sql
-SELECT
-    clientes.nome,
-    COUNT(pedidos.id) AS total_pedidos
-FROM clientes
-
-LEFT JOIN pedidos
-    ON pedidos.cliente_id = clientes.id
-
-GROUP BY clientes.id;
-```
-
-### Produtos mais caros que a média
-
-```sql
-SELECT *
-FROM produtos
-WHERE preco > (
-    SELECT AVG(preco)
-    FROM produtos
-);
-```
-
-### Classificação dos produtos
-
-```sql
-SELECT
-    nome,
-    preco,
-
+    nome, preco,
     CASE
         WHEN preco < 100 THEN 'Econômico'
         WHEN preco < 500 THEN 'Intermediário'
         ELSE 'Premium'
-    END AS categoria_preco
-
+    END AS faixa
 FROM produtos;
 ```
 
 ---
 
-# 🧭 Fluxo de aprendizado
+## Referência rápida
 
-```text
-SQL
- │
- ├── Fundamentos
- │    ├── Banco de dados
- │    ├── Tabelas
- │    ├── Tipos de dados
- │    └── Constraints
- │
- ├── Manipulação
- │    ├── INSERT
- │    ├── UPDATE
- │    └── DELETE
- │
- ├── Consultas
- │    ├── SELECT
- │    ├── WHERE
- │    ├── LIKE
- │    ├── IN
- │    ├── BETWEEN
- │    ├── ORDER BY
- │    └── LIMIT
- │
- ├── Relacionamentos
- │    ├── 1:1
- │    ├── 1:N
- │    ├── N:1
- │    └── N:N
- │
- ├── Consultas avançadas
- │    ├── JOIN
- │    ├── GROUP BY
- │    ├── HAVING
- │    ├── Subqueries
- │    ├── EXISTS
- │    ├── UNION
- │    ├── CASE
- │    └── COALESCE
- │
- ├── Banco de dados avançado
- │    ├── Transactions
- │    ├── Views
- │    ├── Indexes
- │    ├── ON DELETE
- │    └── ON UPDATE
- │
- └── Projeto
-      └── Sistema completo
-```
-
----
-
-# 📌 Resumo rápido
-
-| Operação               | Comando             |
-| ---------------------- | ------------------- |
-| Criar banco            | `CREATE DATABASE`   |
-| Selecionar banco       | `USE`               |
-| Criar tabela           | `CREATE TABLE`      |
-| Alterar tabela         | `ALTER TABLE`       |
-| Excluir tabela         | `DROP TABLE`        |
-| Limpar tabela          | `TRUNCATE`          |
-| Inserir                | `INSERT`            |
-| Consultar              | `SELECT`            |
-| Filtrar                | `WHERE`             |
-| Atualizar              | `UPDATE`            |
-| Excluir                | `DELETE`            |
-| Ordenar                | `ORDER BY`          |
-| Limitar                | `LIMIT`             |
-| Agrupar                | `GROUP BY`          |
-| Filtrar grupos         | `HAVING`            |
-| Relacionar tabelas     | `JOIN`              |
-| Contar                 | `COUNT`             |
-| Somar                  | `SUM`               |
-| Média                  | `AVG`               |
-| Maior valor            | `MAX`               |
-| Menor valor            | `MIN`               |
-| Consulta interna       | `Subquery`          |
-| Verificar existência   | `EXISTS`            |
-| Unir consultas         | `UNION`             |
-| Condições              | `CASE`              |
-| Substituir `NULL`      | `COALESCE`          |
-| Copiar dados           | `INSERT ... SELECT` |
-| Confirmar transaction  | `COMMIT`            |
-| Desfazer transaction   | `ROLLBACK`          |
-| Criar consulta virtual | `VIEW`              |
-| Melhorar buscas        | `INDEX`             |
-
----
-
-# 🧠 Conceito final
-
-Um banco de dados bem estruturado não depende apenas de saber escrever comandos SQL.
-
-É necessário entender:
-
-```text
-        MODELAGEM
-            │
-            ▼
-        ESTRUTURA
-            │
-            ▼
-      RELACIONAMENTOS
-            │
-            ▼
-       INTEGRIDADE
-            │
-            ▼
-        CONSULTAS
-            │
-            ▼
-       PERFORMANCE
-            │
-            ▼
-        SEGURANÇA
-```
-
-O objetivo é construir bancos que sejam:
-
-* **Consistentes**
-* **Escaláveis**
-* **Performáticos**
-* **Seguros**
-* **Fáceis de manter**
-* **Bem relacionados**
-
----
-
-> **SQL não é apenas consultar dados. É saber estruturar, relacionar, manipular e garantir a integridade das informações.**
+| Tarefa | Comando |
+| --- | --- |
+| Criar banco | `CREATE DATABASE` |
+| Selecionar banco | `USE` |
+| Criar tabela | `CREATE TABLE` |
+| Alterar tabela | `ALTER TABLE` |
+| Deletar tabela | `DROP TABLE` |
+| Inserir dados | `INSERT` |
+| Consultar | `SELECT` |
+| Filtrar | `WHERE` |
+| Atualizar | `UPDATE` |
+| Deletar registro | `DELETE` |
+| Ordenar | `ORDER BY` |
+| Limitar | `LIMIT` |
+| Agrupar | `GROUP BY` |
+| Filtrar grupos | `HAVING` |
+| Unir tabelas | `JOIN` |
+| Contar | `COUNT()` |
+| Somar | `SUM()` |
+| Média | `AVG()` |
+| Máximo | `MAX()` |
+| Mínimo | `MIN()` |
+| Condições | `CASE` |
+| Substituir NULL | `COALESCE()` |
+| Confirmar transação | `COMMIT` |
+| Desfazer transação | `ROLLBACK` |
+| Criar view | `CREATE VIEW` |
+| Criar índice | `CREATE INDEX` |
